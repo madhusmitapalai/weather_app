@@ -23,10 +23,13 @@
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     min-height: 500px;
+    overflow: hidden;
 }
 
 .image-container {
-    background-image: url(../assets/background1.jpg);
+    position: relative;
+    top: 0;
+
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -42,6 +45,8 @@
 
 .location-info {
     text-align: right;
+    z-index: 1;
+    position: relative;
 }
 
 .location-info h1, h2 {
@@ -51,7 +56,10 @@
 .time-temp {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+    z-index: 1;
+
+    position: relative;
 }
 
 .time-temp p {
@@ -64,7 +72,7 @@
 }
 
 .temp h3 {
-    font-size: 4rem;
+    font-size: 3rem;
 }
 
 .text-container {
@@ -127,4 +135,37 @@
 
 .search-results .stats p {
     margin-bottom: 0;
+}
+
+.error-message {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+.error-message img {
+    max-width: 150px;
+}
+
+.error-message p {
+    color: #fff;
+}
+
+.description {
+    color: #fff;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.gradient {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    background-image: linear-gradient(to right, #434343 0%, black 100%);
 }
