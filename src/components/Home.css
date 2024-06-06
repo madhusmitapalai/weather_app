@@ -1,0 +1,130 @@
+.main-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url(../assets/background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+
+}
+
+.weather-conatiner {
+    max-width: 800px;
+    width: 90%;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    min-height: 500px;
+}
+
+.image-container {
+    background-image: url(../assets/background1.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: 0.5rem 0 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #fff;
+    padding: 1rem;
+
+}
+
+
+.location-info {
+    text-align: right;
+}
+
+.location-info h1, h2 {
+    font-size: 1.7rem;
+}
+
+.time-temp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-temp p {
+    font-size: 1rem;
+
+}
+
+.time-temp time {
+    font-size: 2.5rem;
+}
+
+.temp h3 {
+    font-size: 4rem;
+}
+
+.text-container {
+    padding: 1rem;
+}
+
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-field {
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    height: 2.5rem;
+    flex: 1;
+}
+
+.search-container button {
+    border: none;
+    outline: none;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3rem;
+    /* border-radius: 0.5rem; */
+}
+
+.search-container button:hover {
+    background-color: #000;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.search-results {
+    padding: 2rem 0;
+}
+
+.search-results .temp-results {
+    color: #fff;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+
+}
+
+.search-results .stats {
+    background-color: #fff;
+    padding: 0.5rem;
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.search-results .stats p {
+    margin-bottom: 0;
+}
