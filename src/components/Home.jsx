@@ -75,13 +75,21 @@ const Home = () => {
     return `https://openweathermap.org/img/wn/${icon}@2x.png`;
   };
 
+  const getWeather = async (latitude, longitude) => {
+    const url = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&lat=${latitude}&lon=${longitude}&units=metric`;
+    try {
+      await fetchWeather(url);
+    } catch (fetchError) {
+      setError("Failed to fetch weather data");
+    }
+  };
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          const url = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&lat=${latitude}&lon=${longitude}&units=metric`;
-          fetchWeather(url);
+          getWeather(latitude, longitude);
         },
         (error) => {
           setError("Unable to retrieve your location");
@@ -90,7 +98,8 @@ const Home = () => {
     } else {
       setError("Geolocation is not supported by this browser");
     }
-  }, [API_KEY, fetchWeather]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchBackgroundImage = async (query) => {
     try {
