@@ -3,10 +3,9 @@ import "./Home.css";
 import windSpeedIcon from "../assets/wind-speed.gif";
 import humidityIcon from "../assets/humidity.gif";
 import cloudsIcon from "../assets/clouds.gif";
-import loadingIcon from "../assets/loading-weather.gif";
-
-import sadCloudIcon from "../assets/sad-cloud.png";
 import { ToastContainer, toast } from "react-toastify";
+import loadingIcon from "../assets/loading-weather.gif";
+import sadCloudIcon from "../assets/sad-cloud.png";
 import axios from "axios";
 const Home = () => {
   const [location, setLocation] = useState("");
@@ -14,9 +13,9 @@ const Home = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
-  const [backgroundImage, setBackgroundImage] = useState("");
   const API_KEY = process.env.REACT_APP_API_KEY;
   const ACCESS_KEY = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
+  const [backgroundImage, setBackgroundImage] = useState("");
   const timeOptions = {
     hour: "numeric",
     minute: "numeric",
@@ -30,6 +29,14 @@ const Home = () => {
     year: "numeric",
   };
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const formattedTime = currentDateTime.toLocaleTimeString(
     "en-US",
     timeOptions
@@ -38,6 +45,36 @@ const Home = () => {
     "en-US",
     dateOptions
   );
+
+  const fetchWeather = async (url) => {
+    setLoading(true);
+
+    try {
+      const response = await axios.get(url);
+      console.log("response", response);
+      setWeatherData(response.data);
+      fetchBackgroundImage(response?.data?.name);
+      setError("");
+    } catch (err) {
+      setError("Location not found or error fetching data");
+      setWeatherData(null);
+      toast.error("Location not found or error fetching data");
+      fetchBackgroundImage("");
+    }
+    setLoading(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const url = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=${location}&units=metric`;
+    fetchWeather(url);
+    setLocation("");
+  };
+
+  const getWeatherIconUrl = (icon) => {
+    return `https://openweathermap.org/img/wn/${icon}@2x.png`;
+  };
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -45,44 +82,23 @@ const Home = () => {
           const { latitude, longitude } = position.coords;
           const url = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&lat=${latitude}&lon=${longitude}&units=metric`;
           fetchWeather(url);
-          fetchBackgroundImage("weather");
         },
         (error) => {
           setError("Unable to retrieve your location");
-          toast.error("Unable to retrieve your location");
+
+          // toast.error("Unable to retrieve your location");
         }
       );
     } else {
       setError("Geolocation is not supported by this browser");
-      toast.error("Geolocation is not supported by this browser");
+      // toast.error("Geolocation is not supported by this browser");
     }
-  }, [API_KEY]);
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const url = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=${location}&units=metric`;
-    fetchWeather(url);
-    fetchBackgroundImage(location);
-    setLocation("");
-  };
-  const fetchWeather = async (url) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(url);
-      setWeatherData(response.data);
-
-      setError("");
-    } catch (err) {
-      // setError("Location not found or error fetching data");
-      setWeatherData(null);
-      toast.error("Location not found or error fetching data");
-    }
-    setLoading(false);
-  };
   const fetchBackgroundImage = async (query) => {
     try {
       const response = await axios.get(
-        `https://api.unsplash.com/search/photos?query=${query}&client_id=${"xNzUs-iA8MW28-qdvTBRmM0S0_qDKg6nsFlIGPAP3AQ"}&per_page=20`
+        `https://api.unsplash.com/search/photos?query=${query}&client_id=${ACCESS_KEY}&per_page=20`
       );
       if (response.data.results.length > 0) {
         setBackgroundImage(response.data.results[0].urls.full);
@@ -94,9 +110,9 @@ const Home = () => {
       setBackgroundImage("");
     }
   };
-
   return (
     <div className="main-container">
+      <ToastContainer />
       <div className="row weather-conatiner">
         <div
           className="col col-md-7 image-container"
@@ -112,7 +128,18 @@ const Home = () => {
               <time>{formattedTime}</time>
               <p className="mb-0">{formattedDate}</p>
             </div>
-            <div className="temp">{/* <h3 className="mb-0">33°C</h3> */}</div>
+
+            <div className="temp">
+              {weatherData && (
+                <>
+                  <img
+                    src={getWeatherIconUrl(weatherData.weather[0].icon)}
+                    alt="weather icon"
+                  />
+                  <h3 className="mb-0">{weatherData.main.temp}°C</h3>
+                </>
+              )}
+            </div>
           </div>
         </div>
         <div className="col col-md-5 text-container">
@@ -137,6 +164,7 @@ const Home = () => {
               <p>Oops! couldn't found the location you are looking for </p>
             </div>
           )}
+
           {loading && (
             <img src={loadingIcon} alt="loading" className="img-fluid" />
           )}
