@@ -85,15 +85,12 @@ const Home = () => {
         },
         (error) => {
           setError("Unable to retrieve your location");
-
-          // toast.error("Unable to retrieve your location");
         }
       );
     } else {
       setError("Geolocation is not supported by this browser");
-      // toast.error("Geolocation is not supported by this browser");
     }
-  }, []);
+  }, [API_KEY, fetchWeather]);
 
   const fetchBackgroundImage = async (query) => {
     try {
